@@ -11,7 +11,11 @@ return {
         "neovim/nvim-lspconfig",
         opts = {
             servers = {
-                verible = {},
+                verible = {
+                    root_dir = function(fname)
+                        return vim.fs.dirname(vim.fs.find("verible.filelist", { path = fname, upward = true })[1])
+                    end,
+                },
             },
         },
     },

@@ -12,6 +12,13 @@ vim.keymap.set("i", "<C-b>", "<Left>")
 vim.keymap.set("i", "<C-a>", "<Home>")
 vim.keymap.set("i", "<C-e>", "<End>")
 
+vim.keymap.set("v", "<C-p>", "<Up>")
+vim.keymap.set("v", "<C-n>", "<Down>")
+vim.keymap.set("v", "<C-f>", "<Right>")
+vim.keymap.set("v", "<C-b>", "<Left>")
+vim.keymap.set("v", "<C-a>", "<Home>")
+vim.keymap.set("v", "<C-e>", "<End>")
+
 vim.keymap.set("n", "<C-v>", "<C-f>")
 vim.keymap.set("n", "<C-S-v>", "<C-b>")
 vim.keymap.set("n", "<C-p>", "<Up>")

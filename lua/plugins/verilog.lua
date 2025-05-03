@@ -1,13 +1,13 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        opts = { ensure_installed = { "swift" } },
+        opts = { ensure_installed = { "verilog" } },
     },
     {
         "neovim/nvim-lspconfig",
         opts = {
             servers = {
-                sourcekit = {},
+                verible = {},
             },
         },
     },

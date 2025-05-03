@@ -1,0 +1,15 @@
+local mode = { "i", "x", "n", "s" }
+vim.keymap.set(mode, "<C-f>", "<Right>")
+vim.keymap.set(mode, "<C-b>", "<Left>")
+vim.keymap.set(mode, "<C-n>", "<Down>")
+vim.keymap.set(mode, "<C-p>", "<Up>")
+vim.keymap.set(mode, "<C-a>", "<Home>")
+vim.keymap.set(mode, "<C-e>", "<End>")
+vim.keymap.set(mode, "<C-d>", "<Del>")
+vim.keymap.set(mode, "<C-v>", "<PageDown>")
+vim.keymap.set(mode, "<M-v>", "<PageUp>")
+vim.keymap.set(mode, "<C-xC-s>", "<cmd>wall<cr><esc>", { desc = "Save File" })
+
+vim.keymap.set("i", "<C-CR>", "<Esc>")
+vim.keymap.set("n", "<C-l>", "zz")
+vim.keymap.set("n", "<C-k>", "d$")

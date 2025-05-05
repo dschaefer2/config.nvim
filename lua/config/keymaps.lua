@@ -8,7 +8,6 @@ vim.keymap.set(mode, "<C-e>", "<End>")
 vim.keymap.set(mode, "<C-d>", "<Del>")
 vim.keymap.set(mode, "<C-S-n>", "<PageDown>")
 vim.keymap.set(mode, "<C-S-p>", "<PageUp>")
-vim.keymap.set(mode, "<C-xC-s>", "<cmd>wall<cr><esc>", { desc = "Save File" })
 
 vim.keymap.set("i", "<C-CR>", "<Esc>")
 vim.keymap.set("n", "<C-l>", "zz")

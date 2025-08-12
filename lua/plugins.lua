@@ -5,6 +5,16 @@ vim.pack.add({
 
 vim.cmd('colorscheme tokyonight-night')
 
+require('mini.diff').setup()
+require('mini.icons').setup()
+require('mini.notify').setup()
+require('mini.statusline').setup()
+
+require('mini.git').setup({
+    command = {
+        split = 'horizontal',
+    }
+})
 local miniclue = require('mini.clue')
 miniclue.setup({
     triggers = {

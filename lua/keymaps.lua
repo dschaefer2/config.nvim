@@ -22,9 +22,10 @@ vim.keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally"
 vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
 vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" })
 
-vim.pack.add({
-    "https://github.com/folke/tokyonight.nvim",
-})
-
-vim.cmd("colorscheme tokyonight-night")
+vim.keymap.set("n", "-", function()
+    local buf_name = vim.api.nvim_buf_get_name(0)
+    local path = vim.fn.filereadable(buf_name) == 1 and buf_name or vim.fn.getcwd()
+    MiniFiles.open(path)
+    MiniFiles.reveal_cwd()
+end, { desc = "Open Mini Files" })
 

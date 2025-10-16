@@ -11,6 +11,8 @@ vim.keymap.set(mode, "<C-p>", "<Up>")
 vim.keymap.set(mode, "<C-a>", "<Home>")
 vim.keymap.set(mode, "<C-e>", "<End>")
 vim.keymap.set(mode, "<C-d>", "<Del>")
+vim.keymap.set(mode, "<C-S-n", "<PgDown>")
+vim.keymap.set(mode, "<C-S-P", "<PgUp>")
 
 vim.keymap.set("n", "<C-k>", "d$")
 vim.keymap.set("n", "<C-x><C-s>", ":w<CR>")

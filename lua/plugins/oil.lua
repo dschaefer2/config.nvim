@@ -24,7 +24,7 @@ return {
             skip_confirm_for_simple_edits = true,
         })
 
-        vim.keymap.set("n", "<leader>f", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+        vim.keymap.set("n", "<leader>o", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "oil", -- Adjust if Oil uses a specific file type identifier

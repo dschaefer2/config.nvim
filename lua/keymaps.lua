@@ -24,3 +24,5 @@ vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
 vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" })
 vim.keymap.set("n", "<leader>ss", "<C-w>w", { desc = "Switch between splits"})
 
+vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, opts)
+

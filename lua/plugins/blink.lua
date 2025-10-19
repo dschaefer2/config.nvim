@@ -4,7 +4,7 @@ return {
         dependencies = { "rafamadriz/friendly-snippets" },
         version = "1.x",
         opts = {
-            keymap = { preset = "super-tab" },
+            keymap = { preset = "enter" },
             appearance = {
                 nerd_font_variant = "mono"
             },

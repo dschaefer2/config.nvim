@@ -94,6 +94,10 @@ vim.keymap.set(mode, "<C-a>", "<Home>")
 vim.keymap.set(mode, "<C-e>", "<End>")
 vim.keymap.set(mode, "<C-d>", "<Del>")
 
+vim.keymap.set("n", "<A-f>", "<C-w>l")
+vim.keymap.set("n", "<A-b>", "<C-w>h")
+vim.keymap.set("n", "<A-n>", "<C-w>j")
+vim.keymap.set("n", "<A-p>", "<C-w>k")
 vim.keymap.set("n", "<C-k>", "d$")
 
 vim.keymap.set("n", "<leader>pu", vim.pack.update)
@@ -232,11 +236,16 @@ local snacks = require("snacks")
 snacks.setup({
     picker = {},
     explorer = {},
+    terminal = {},
 })
 
-vim.keymap.set("n", "<leader><space>", function () snacks.picker.smart() end)
+vim.keymap.set("n", "<leader>f", function () snacks.picker.files() end)
+vim.keymap.set("n", "<leader>b", function () snacks.picker.buffers() end)
 vim.keymap.set("n", "<leader>e", function () snacks.explorer() end)
 vim.keymap.set("n", "<leader>/", function () snacks.picker.grep() end)
+vim.keymap.set("n", "<leader>t", function () snacks.terminal.toggle() end)
+
+vim.keymap.set("t", "<A-p>", "<C-\\><C-N><C-w>k")
 
 -- INFO: utility plugins
 vim.pack.add({

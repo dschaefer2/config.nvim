@@ -197,7 +197,8 @@ vim.lsp.config('lua_ls', {
 })
 
 vim.lsp.enable({
-    "lua_ls"
+    "lua_ls",
+    "sourcekit",
 })
 
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)

@@ -236,6 +236,7 @@ snacks.setup({
 
 vim.keymap.set("n", "<leader><space>", function () snacks.picker.smart() end)
 vim.keymap.set("n", "<leader>e", function () snacks.explorer() end)
+vim.keymap.set("n", "<leader>/", function () snacks.picker.grep() end)
 
 -- INFO: utility plugins
 vim.pack.add({

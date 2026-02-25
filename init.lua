@@ -224,7 +224,7 @@ require("which-key").setup({
 vim.pack.add({
     "https://github.com/folke/snacks.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
-})
+}, { confirm = false })
 
 local snacks = require("snacks")
 

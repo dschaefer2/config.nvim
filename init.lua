@@ -96,6 +96,8 @@ vim.keymap.set(mode, "<C-d>", "<Del>")
 
 vim.keymap.set("n", "<C-k>", "d$")
 
+vim.keymap.set("n", "<leader>pu", vim.pack.update)
+
 -- INFO: colorscheme
 vim.pack.add({ "https://github.com/catppuccin/nvim" }, { confirm = false })
 vim.cmd.colorscheme("catppuccin")
@@ -219,8 +221,20 @@ require("which-key").setup({
     }
 })
 
--- NOTE: there are many more quality-of-life plugins available and others that
--- achieve what these do. these are just our recommendations to start.
+vim.pack.add({
+    "https://github.com/folke/snacks.nvim",
+	"https://github.com/nvim-tree/nvim-web-devicons",
+})
+
+local snacks = require("snacks")
+
+snacks.setup({
+    picker = {},
+    explorer = {},
+})
+
+vim.keymap.set("n", "<leader><space>", function () snacks.picker.smart() end)
+vim.keymap.set("n", "<leader>e", function () snacks.explorer() end)
 
 -- INFO: utility plugins
 vim.pack.add({

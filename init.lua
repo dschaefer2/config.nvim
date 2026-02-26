@@ -94,6 +94,8 @@ vim.keymap.set(mode, "<C-a>", "<Home>")
 vim.keymap.set(mode, "<C-e>", "<End>")
 vim.keymap.set(mode, "<C-d>", "<Del>")
 
+vim.keymap.set("i", "<C-g>", "<Esc>")
+
 vim.keymap.set("n", "<A-f>", "<C-w>l")
 vim.keymap.set("n", "<A-b>", "<C-w>h")
 vim.keymap.set("n", "<A-n>", "<C-w>j")

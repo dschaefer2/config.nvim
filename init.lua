@@ -98,6 +98,12 @@ vim.keymap.set("n", "<A-f>", "<C-w>l")
 vim.keymap.set("n", "<A-b>", "<C-w>h")
 vim.keymap.set("n", "<A-n>", "<C-w>j")
 vim.keymap.set("n", "<A-p>", "<C-w>k")
+
+vim.keymap.set("n", "<C-x>0", "<C-w>q")
+vim.keymap.set("n", "<C-x>1", "<C-w>o")
+vim.keymap.set("n", "<C-x>2", "<C-w>s")
+vim.keymap.set("n", "<C-x>o", "<C-w>w")
+
 vim.keymap.set("n", "<C-k>", "d$")
 
 vim.keymap.set("n", "<leader>pu", vim.pack.update)

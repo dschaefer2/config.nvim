@@ -105,6 +105,7 @@ vim.keymap.set("n", "<C-x>2", "<C-w>s")
 vim.keymap.set("n", "<C-x>o", "<C-w>w")
 
 vim.keymap.set("n", "<C-k>", "d$")
+vim.keymap.set("n", "<C-l>", "zz")
 
 vim.keymap.set("n", "<leader>pu", vim.pack.update)
 

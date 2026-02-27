@@ -81,11 +81,9 @@ vim.diagnostic.config({
     virtual_text = true, -- show inline diagnostics
 })
 
--- clear search highlights with <Esc>
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
 -- my glorious emacs keys
 local mode = { "i", "x", "n", "s" }
+vim.keymap.set(mode, "<C-g>", "<Esc>")
 vim.keymap.set(mode, "<C-f>", "<Right>")
 vim.keymap.set(mode, "<C-b>", "<Left>")
 vim.keymap.set(mode, "<C-n>", "<Down>")
@@ -94,7 +92,9 @@ vim.keymap.set(mode, "<C-a>", "<Home>")
 vim.keymap.set(mode, "<C-e>", "<End>")
 vim.keymap.set(mode, "<C-d>", "<Del>")
 
-vim.keymap.set("i", "<C-g>", "<Esc>")
+vim.keymap.set("i", "<C-x><C-s>", "<Esc>:w<CR>a")
+vim.keymap.set("n", "<C-x><C-s>", ":w<CR>")
+vim.keymap.set("n", "<C-g>", "<Esc>:nohlsearch<CR>")
 
 vim.keymap.set("n", "<A-f>", "<C-w>l")
 vim.keymap.set("n", "<A-b>", "<C-w>h")

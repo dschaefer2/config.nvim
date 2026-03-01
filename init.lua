@@ -96,11 +96,6 @@ vim.keymap.set("i", "<C-x><C-s>", "<Esc>:w<CR>a")
 vim.keymap.set("n", "<C-x><C-s>", ":w<CR>")
 vim.keymap.set("n", "<C-g>", "<Esc>:nohlsearch<CR>")
 
-vim.keymap.set("n", "<A-f>", "<C-w>l")
-vim.keymap.set("n", "<A-b>", "<C-w>h")
-vim.keymap.set("n", "<A-n>", "<C-w>j")
-vim.keymap.set("n", "<A-p>", "<C-w>k")
-
 vim.keymap.set("n", "<C-x>0", "<C-w>q")
 vim.keymap.set("n", "<C-x>1", "<C-w>o")
 vim.keymap.set("n", "<C-x>2", "<C-w>s")
@@ -108,6 +103,7 @@ vim.keymap.set("n", "<C-x>o", "<C-w>w")
 
 vim.keymap.set("n", "<C-k>", "d$")
 vim.keymap.set("n", "<C-l>", "zz")
+vim.keymap.set("n", "<C-s>", "/")
 
 vim.keymap.set("n", "<leader>pu", vim.pack.update)
 
@@ -214,16 +210,47 @@ vim.lsp.enable({
     "sourcekit",
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-    callback = function (ev)
-        vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to Definition" })
-        vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go to Declaration" })
-        vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, { buffer = ev.buf, desc = "Go to References" })
-        vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, { buffer = ev.buf, desc = "Show Hover" })
-        vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { buffer = ev.buf, desc = "Format" })
+vim.pack.add({ "https://codeberg.org/mfussenegger/nvim-dap" }, { confirm = false })
+
+local dap = require("dap")
+
+vim.keymap.set("n", "<leader>dc", function() dap.continue() end, { desc = "Debug Continue" })
+
+vim.keymap.set("n", "<leader>ds", function()
+    local desc = vim.json.decode(vim.fn.system("swift package describe --type json"))
+    local execs = {}
+    for _, product in ipairs(desc.products) do
+        if product.type.executable ~= nil then
+            table.insert(execs, { text = product.name })
+        end
     end
-})
+
+    Snacks.picker.pick({
+        source = "swift_execs",
+        items = execs,
+        format = "text",
+        layout = {
+            preset = "select"
+        },
+        confirm = function(picker, item)
+            picker:close()
+            vim.schedule(function()
+                Snacks.input.input({
+                    prompt = "Args"
+                }, function(input)
+                    if input == nil then
+                        return
+                    end
+                    local cmd = { item.text }
+                    for _, v in ipairs(vim.split(input, " +")) do
+                        table.insert(cmd, v)
+                    end
+                    print(vim.inspect(cmd))
+                end)
+           end)
+        end
+    })
+end)
 
 -- INFO: better statusline
 vim.pack.add({ "https://github.com/nvim-lualine/lualine.nvim" }, { confirm = false })
@@ -246,7 +273,7 @@ require("which-key").setup({
 
 vim.pack.add({
     "https://github.com/folke/snacks.nvim",
-	"https://github.com/nvim-tree/nvim-web-devicons",
+    "https://github.com/nvim-tree/nvim-web-devicons",
 }, { confirm = false })
 
 local snacks = require("snacks")
@@ -257,13 +284,23 @@ snacks.setup({
     terminal = {},
 })
 
-vim.keymap.set("n", "<leader>f", function () snacks.picker.files() end)
-vim.keymap.set("n", "<leader>b", function () snacks.picker.buffers() end)
-vim.keymap.set("n", "<leader>e", function () snacks.explorer() end)
-vim.keymap.set("n", "<leader>/", function () snacks.picker.grep() end)
-vim.keymap.set("n", "<leader>t", function () snacks.terminal.toggle() end)
+vim.keymap.set("n", "<leader>pf", snacks.picker.files, { desc = "Pick Files" })
+vim.keymap.set("n", "<leader>pb", snacks.picker.buffers, { desc = "Pick Buffers" })
+vim.keymap.set("n", "<leader>e", function() snacks.explorer() end, { desc = "Explorer" })
+vim.keymap.set("n", "<leader>pg", snacks.picker.grep, { desc = "Grep Files" })
+vim.keymap.set("n", "<leader>pt", snacks.terminal.toggle, { desc = "Toggle Terminal" })
 
-vim.keymap.set("t", "<A-p>", "<C-\\><C-N><C-w>k")
+vim.keymap.set("n", "<leader>gd", snacks.picker.lsp_definitions, { desc = "Go to Definition" })
+vim.keymap.set("n", "<leader>gD", snacks.picker.lsp_declarations, { desc = "Go to Declaration" })
+vim.keymap.set("n", "<leader>gr", snacks.picker.lsp_references, { nowait = true, desc = "Find References" })
+vim.keymap.set("n", "<leader>gI", snacks.picker.lsp_implementations, { desc = "Go to Implementation" })
+vim.keymap.set("n", "<leader>gy", snacks.picker.lsp_type_definitions, { desc = "Go to Type Definition" })
+vim.keymap.set("n", "<leader>gci", snacks.picker.lsp_incoming_calls, { desc = "Calls Incoming" })
+vim.keymap.set("n", "<leader>gco", snacks.picker.lsp_outgoing_calls, { desc = "Calls Outgoing" })
+vim.keymap.set("n", "<leader>gs", snacks.picker.lsp_symbols, { desc = "Find Symbols" })
+vim.keymap.set("n", "<leader>sS", snacks.picker.lsp_workspace_symbols, { desc = "Find Workspace Symbols" })
+
+vim.keymap.set("t", "<C-x><C-o>", "<C-\\><C-N><C-w>o")
 
 -- INFO: utility plugins
 vim.pack.add({

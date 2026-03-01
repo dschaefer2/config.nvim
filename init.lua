@@ -92,7 +92,7 @@ vim.keymap.set(mode, "<C-a>", "<Home>")
 vim.keymap.set(mode, "<C-e>", "<End>")
 vim.keymap.set(mode, "<C-d>", "<Del>")
 
-vim.keymap.set("i", "<C-x><C-s>", "<Esc>:w<CR>a")
+vim.keymap.set("i", "<C-x><C-s>", "<Esc>:w<CR>")
 vim.keymap.set("n", "<C-x><C-s>", ":w<CR>")
 vim.keymap.set("n", "<C-g>", "<Esc>:nohlsearch<CR>")
 
@@ -101,6 +101,7 @@ vim.keymap.set("n", "<C-x>1", "<C-w>o")
 vim.keymap.set("n", "<C-x>2", "<C-w>s")
 vim.keymap.set("n", "<C-x>o", "<C-w>w")
 
+vim.keymap.set("i", "<C-k>", "<Esc>d$a")
 vim.keymap.set("n", "<C-k>", "d$")
 vim.keymap.set("n", "<C-l>", "zz")
 vim.keymap.set("n", "<C-s>", "/")
@@ -216,6 +217,27 @@ local dap = require("dap")
 
 vim.keymap.set("n", "<leader>dc", function() dap.continue() end, { desc = "Debug Continue" })
 
+-- Swift stuff
+function SwiftBuild(command)
+    Snacks.terminal.open(command, {
+        auto_close = false,
+        win = {
+            position = "bottom",
+            on_close = function(win)
+                vim.fn.setqflist({}, " ", {
+                    title = command,
+                    lines = win:lines(),
+                    efm = "%E%f:%l:%c: %t%*[^:]: %m,%-C%.%#"
+                })
+            end
+        }
+    })
+end
+
+vim.keymap.set("n", "<leader>b", function()
+    SwiftBuild("swift build")
+end)
+
 vim.keymap.set("n", "<leader>ds", function()
     local desc = vim.json.decode(vim.fn.system("swift package describe --type json"))
     local execs = {}
@@ -289,6 +311,8 @@ vim.keymap.set("n", "<leader>pb", snacks.picker.buffers, { desc = "Pick Buffers"
 vim.keymap.set("n", "<leader>e", function() snacks.explorer() end, { desc = "Explorer" })
 vim.keymap.set("n", "<leader>pg", snacks.picker.grep, { desc = "Grep Files" })
 vim.keymap.set("n", "<leader>pt", snacks.terminal.toggle, { desc = "Toggle Terminal" })
+vim.keymap.set("n", "<leader>pr", snacks.picker.recent, { desc = "Recent Files" })
+vim.keymap.set("n", "<leader>pq", snacks.picker.qflist, { desc = "Quickfix" })
 
 vim.keymap.set("n", "<leader>gd", snacks.picker.lsp_definitions, { desc = "Go to Definition" })
 vim.keymap.set("n", "<leader>gD", snacks.picker.lsp_declarations, { desc = "Go to Declaration" })

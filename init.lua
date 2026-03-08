@@ -101,7 +101,7 @@ vim.keymap.set("n", "<C-x>1", "<C-w>o")
 vim.keymap.set("n", "<C-x>2", "<C-w>s")
 vim.keymap.set("n", "<C-x>o", "<C-w>w")
 
-vim.keymap.set("i", "<C-k>", "<Esc>d$a")
+vim.keymap.set("i", "<C-k>", "<Esc>ld$a")
 vim.keymap.set("n", "<C-k>", "d$")
 vim.keymap.set("n", "<C-l>", "zz")
 vim.keymap.set("n", "<C-s>", "/")

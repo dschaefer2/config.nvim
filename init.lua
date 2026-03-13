@@ -306,13 +306,13 @@ snacks.setup({
     terminal = {},
 })
 
-vim.keymap.set("n", "<leader>pf", snacks.picker.files, { desc = "Pick Files" })
-vim.keymap.set("n", "<leader>pb", snacks.picker.buffers, { desc = "Pick Buffers" })
+vim.keymap.set("n", "<leader>ff", snacks.picker.files, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>fb", snacks.picker.buffers, { desc = "find Buffers" })
 vim.keymap.set("n", "<leader>e", function() snacks.explorer() end, { desc = "Explorer" })
-vim.keymap.set("n", "<leader>pg", snacks.picker.grep, { desc = "Grep Files" })
-vim.keymap.set("n", "<leader>pt", snacks.terminal.toggle, { desc = "Toggle Terminal" })
-vim.keymap.set("n", "<leader>pr", snacks.picker.recent, { desc = "Recent Files" })
-vim.keymap.set("n", "<leader>pq", snacks.picker.qflist, { desc = "Quickfix" })
+vim.keymap.set("n", "<leader>fg", snacks.picker.grep, { desc = "Grep Files" })
+vim.keymap.set("n", "<leader>t", snacks.terminal.toggle, { desc = "Toggle Terminal" })
+vim.keymap.set("n", "<leader>fr", snacks.picker.recent, { desc = "Recent Files" })
+vim.keymap.set("n", "<leader>fq", snacks.picker.qflist, { desc = "Quickfix" })
 
 vim.keymap.set("n", "<leader>gd", snacks.picker.lsp_definitions, { desc = "Go to Definition" })
 vim.keymap.set("n", "<leader>gD", snacks.picker.lsp_declarations, { desc = "Go to Declaration" })
@@ -324,7 +324,7 @@ vim.keymap.set("n", "<leader>gco", snacks.picker.lsp_outgoing_calls, { desc = "C
 vim.keymap.set("n", "<leader>gs", snacks.picker.lsp_symbols, { desc = "Find Symbols" })
 vim.keymap.set("n", "<leader>sS", snacks.picker.lsp_workspace_symbols, { desc = "Find Workspace Symbols" })
 
-vim.keymap.set("t", "<C-x><C-o>", "<C-\\><C-N><C-w>o")
+vim.keymap.set("t", "<C-x>o", "<C-\\><C-N><C-w>w")
 
 -- INFO: utility plugins
 vim.pack.add({

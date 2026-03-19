@@ -81,6 +81,10 @@ vim.diagnostic.config({
     virtual_text = true, -- show inline diagnostics
 })
 
+if vim.o.shell:match("bash") then
+    vim.opt.shellcmdflag = "-c"
+end
+
 -- my glorious emacs keys
 local mode = { "i", "x", "n", "s" }
 vim.keymap.set(mode, "<C-g>", "<Esc>")
@@ -273,37 +277,36 @@ vim.keymap.set("n", "<leader>b", function()
 end)
 
 vim.keymap.set("n", "<leader>ds", function()
-    local desc = vim.json.decode(vim.fn.system({"swift", "package", "describe", "--type", "json"}))
-    local execs = {}
-    for _, product in ipairs(desc.products) do
-        if product.type.executable ~= nil then
-            table.insert(execs, { text = product.name })
-        end
-    end
-
     Snacks.picker.pick({
-        source = "swiftpm_configs",
-        items = dap.swiftpm.configs,
+        source = "swiftpm_debug_configs",
+        title = "Select a debug configuration",
+        finder = function(_, _)
+            local items = {}
+            for i, config in ipairs(dap.swiftpm.configs) do
+                items[#items + 1] = {
+                    text = config.name,
+                    idx = i,
+                    item = config,
+                }
+            end
+            return items
+        end,
+        preview = function(ctx)
+            local table_string = vim.inspect(ctx.item.item)
+            local lines = vim.split(table_string, "\n")
+            ctx.preview:set_lines(lines)
+            ctx.preview:highlight({ ft = "lua" })
+        end,
         format = "text",
-        layout = {
-            preset = "select"
-        },
         confirm = function(picker, item)
             picker:close()
-            vim.schedule(function()
-                Snacks.input.input({
-                    prompt = "Args"
-                }, function(input)
-                    if input == nil then
-                        return
-                    end
-                    local cmd = { item.text }
-                    for _, v in ipairs(vim.split(input, " +")) do
-                        table.insert(cmd, v)
-                    end
-                    print(vim.inspect(cmd))
-                end)
-           end)
+            local config = item.item
+            local binPath = vim.fn.system({ "swift", "build", "--show-bin-path" }):gsub("\n", "")
+            config.program = vim.fs.joinpath(binPath,config.product)
+            if vim.fn.has("win32") then
+                config.program = config.program .. ".exe"
+            end
+            dap.run(config)
         end
     })
 end)

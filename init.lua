@@ -218,6 +218,11 @@ vim.pack.add({ "https://codeberg.org/mfussenegger/nvim-dap" }, { confirm = false
 local dap = require("dap")
 
 vim.keymap.set("n", "<leader>dc", function() dap.continue() end, { desc = "Debug Continue" })
+vim.keymap.set("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
+
+vim.fn.sign_define('DapBreakpoint', { text='🛑', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
+vim.fn.sign_define('DapBreakpointCondition', { text='🔍', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
+vim.fn.sign_define('DapBreakpointRejected', { text='🚫', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 
 -- Swift stuff
 function SwiftBuild(command)
@@ -241,7 +246,7 @@ vim.keymap.set("n", "<leader>b", function()
 end)
 
 vim.keymap.set("n", "<leader>ds", function()
-    local desc = vim.json.decode(vim.fn.system("swift package describe --type json"))
+    local desc = vim.json.decode(vim.fn.system({"swift", "package", "describe", "--type", "json"}))
     local execs = {}
     for _, product in ipairs(desc.products) do
         if product.type.executable ~= nil then

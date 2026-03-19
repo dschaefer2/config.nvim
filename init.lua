@@ -217,14 +217,41 @@ vim.pack.add({ "https://codeberg.org/mfussenegger/nvim-dap" }, { confirm = false
 
 local dap = require("dap")
 
-vim.keymap.set("n", "<leader>dc", function() dap.continue() end, { desc = "Debug Continue" })
-vim.keymap.set("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Debug Continue" })
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>dd", dap.clear_breakpoints, { desc = "Clear Breakpoints" })
+vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Run Last Configuration" })
+vim.keymap.set("n", "<leader>dr", dap.restart, { desc = "Restart Current Session" })
+vim.keymap.set("n", "<leader>dq", dap.terminate, { desc = "Terminate Session" })
 
 vim.fn.sign_define('DapBreakpoint', { text='🛑', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 vim.fn.sign_define('DapBreakpointCondition', { text='🔍', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 vim.fn.sign_define('DapBreakpointRejected', { text='🚫', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 
--- Swift stuff
+dap.adapters.lldb = {
+    type = "executable",
+    command = "lldb-dap"
+}
+
+-- We'll manage our own configs to allow for prebuild and such
+dap.swiftpm = {}
+local root = vim.fs.root(0, "Package.swift")
+if root then
+    local filepath = vim.fs.joinpath(root, ".vscode", "nvim-dap.json")
+    local f = io.open(filepath, "r")
+    if f then
+        local content = f:read("*a")
+        f:close()
+
+        local ok, configs = pcall(vim.json.decode, content)
+        if ok then
+            dap.swiftpm.configs = configs
+        else
+            vim.notify("Failed to parse " .. filepath, vim.log.levels.ERROR)
+        end
+    end
+end
+
 function SwiftBuild(command)
     Snacks.terminal.open(command, {
         auto_close = false,
@@ -255,8 +282,8 @@ vim.keymap.set("n", "<leader>ds", function()
     end
 
     Snacks.picker.pick({
-        source = "swift_execs",
-        items = execs,
+        source = "swiftpm_configs",
+        items = dap.swiftpm.configs,
         format = "text",
         layout = {
             preset = "select"

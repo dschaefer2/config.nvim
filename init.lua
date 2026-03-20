@@ -406,7 +406,7 @@ vim.keymap.set("n", "<leader>dn", function()
             local data = vim.fn.system({"jq", "--indent", "4", "."},vim.json.encode(configs))
             local root = vim.fs.root(0, "Package.swift")
             local filepath = vim.fs.joinpath(root, ".vscode", "nvim-dap.json")
-            vim.fn.mkdir(vim.fs.dirname(filepath))
+            vim.fn.mkdir(vim.fs.dirname(filepath), "p")
             local file = io.open(filepath, "w")
             if file then
                 file:write(data)

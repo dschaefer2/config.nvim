@@ -287,7 +287,7 @@ function SwiftBuild(command, autoclose, post)
 end
 
 vim.keymap.set("n", "<leader>b", function()
-    SwiftBuild("swift build", false)
+    SwiftBuild({ "swift", "build" }, false)
 end)
 
 function LoadSwiftPMConfigs()
@@ -341,7 +341,7 @@ vim.keymap.set("n", "<leader>ds", function()
             picker:close()
             local config = item.item
             dap.last_swiftpm = config
-            SwiftBuild("swift build --product " .. config.product, true, function()
+            SwiftBuild({ "swift", "build", "--product", config.product }, true, function()
                 local qflist = vim.fn.getqflist()
                 local errors = vim.tbl_filter(function(qfitem)
                     return qfitem.type == "E" or qfitem.type == "e"
@@ -362,7 +362,7 @@ end)
 vim.keymap.set("n", "<leader>dl", function()
     local config = dap.last_swiftpm
     if config then
-         SwiftBuild("swift build --product " .. config.product, true, function()
+         SwiftBuild({ "swift", "build", "--product", config.product }, true, function()
             local qflist = vim.fn.getqflist()
             local errors = vim.tbl_filter(function(qfitem)
                 return qfitem.type == "E" or qfitem.type == "e"

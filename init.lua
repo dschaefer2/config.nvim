@@ -221,21 +221,49 @@ vim.pack.add({ "https://codeberg.org/mfussenegger/nvim-dap" }, { confirm = false
 
 local dap = require("dap")
 
+vim.pack.add({ "https://github.com/nvim-neotest/nvim-nio", "https://github.com/rcarriga/nvim-dap-ui" }, { confirm = false })
+
+local dapui = require("dapui")
+dapui.setup()
+
+dap.listeners.before.attach.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.launch.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated.dapui_config = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited.dapui_config = function()
+  dapui.close()
+end
+
 vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Debug Continue" })
 vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
 vim.keymap.set("n", "<leader>dd", dap.clear_breakpoints, { desc = "Clear Breakpoints" })
 vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Run Last Configuration" })
 vim.keymap.set("n", "<leader>dr", dap.restart, { desc = "Restart Current Session" })
 vim.keymap.set("n", "<leader>dq", dap.terminate, { desc = "Terminate Session" })
+vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle Debug UI" })
 
 vim.fn.sign_define('DapBreakpoint', { text='🛑', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 vim.fn.sign_define('DapBreakpointCondition', { text='🔍', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 vim.fn.sign_define('DapBreakpointRejected', { text='🚫', texthl='DapBreakpoint', linehl='DapBreakpoint', numhl='DapBreakpoint' })
 
-dap.adapters.lldb = {
-    type = "executable",
-    command = "lldb-dap"
-}
+if vim.fn.has("mac") == 1 then
+    dap.adapters.lldb = {
+        type = "executable",
+        command = "xcrun",
+        args = { "lldb-dap" }
+    }
+else
+    dap.adapters.lldb = {
+        type = "executable",
+        command = "lldb-dap"
+    }
+end
+
 
 -- We'll manage our own configs to allow for prebuild and such
 dap.swiftpm = {}
@@ -303,7 +331,7 @@ vim.keymap.set("n", "<leader>ds", function()
             local config = item.item
             local binPath = vim.fn.system({ "swift", "build", "--show-bin-path" }):gsub("\n", "")
             config.program = vim.fs.joinpath(binPath,config.product)
-            if vim.fn.has("win32") then
+            if vim.fn.has("win32") == 1 then
                 config.program = config.program .. ".exe"
             end
             dap.run(config)

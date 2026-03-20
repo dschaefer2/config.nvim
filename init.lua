@@ -239,10 +239,12 @@ dap.listeners.before.event_exited.dapui_config = function()
   dapui.close()
 end
 
-vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Debug Continue" })
+vim.keymap.set("n", "<F10>", dap.step_over)
+vim.keymap.set("n", "<F11>", dap.step_into)
+vim.keymap.set("n", "<F12>", dap.step_out)
+vim.keymap.set("n", "<leader>dc", dap.continue)
 vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
 vim.keymap.set("n", "<leader>dd", dap.clear_breakpoints, { desc = "Clear Breakpoints" })
-vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Run Last Configuration" })
 vim.keymap.set("n", "<leader>dr", dap.restart, { desc = "Restart Current Session" })
 vim.keymap.set("n", "<leader>dq", dap.terminate, { desc = "Terminate Session" })
 vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle Debug UI" })
@@ -264,29 +266,9 @@ else
     }
 end
 
-
--- We'll manage our own configs to allow for prebuild and such
-dap.swiftpm = {}
-local root = vim.fs.root(0, "Package.swift")
-if root then
-    local filepath = vim.fs.joinpath(root, ".vscode", "nvim-dap.json")
-    local f = io.open(filepath, "r")
-    if f then
-        local content = f:read("*a")
-        f:close()
-
-        local ok, configs = pcall(vim.json.decode, content)
-        if ok then
-            dap.swiftpm.configs = configs
-        else
-            vim.notify("Failed to parse " .. filepath, vim.log.levels.ERROR)
-        end
-    end
-end
-
-function SwiftBuild(command)
+function SwiftBuild(command, autoclose, post)
     Snacks.terminal.open(command, {
-        auto_close = false,
+        auto_close = autoclose,
         win = {
             position = "bottom",
             on_close = function(win)
@@ -295,14 +277,43 @@ function SwiftBuild(command)
                     lines = win:lines(),
                     efm = "%E%f:%l:%c: %t%*[^:]: %m,%-C%.%#"
                 })
+
+                if post then
+                    post()
+                end
             end
         }
     })
 end
 
 vim.keymap.set("n", "<leader>b", function()
-    SwiftBuild("swift build")
+    SwiftBuild("swift build", false)
 end)
+
+function LoadSwiftPMConfigs()
+    local root = vim.fs.root(0, "Package.swift")
+    local configs = {}
+    if root then
+        local filepath = vim.fs.joinpath(root, ".vscode", "nvim-dap.json")
+        local f = io.open(filepath, "r")
+        if f then
+            local content = f:read("*a")
+            f:close()
+
+            local ok, items = pcall(vim.json.decode, content)
+            if ok then
+                configs = items
+            else
+                vim.notify("Failed to parse " .. filepath, vim.log.levels.ERROR)
+            end
+        else
+            vim.notify("No launch configurations", vim.log.levels.ERROR)
+        end
+    else
+        vim.notify("No package", vim.log.levels.ERROR)
+    end
+    return configs
+end
 
 vim.keymap.set("n", "<leader>ds", function()
     Snacks.picker.pick({
@@ -310,7 +321,7 @@ vim.keymap.set("n", "<leader>ds", function()
         title = "Select a debug configuration",
         finder = function(_, _)
             local items = {}
-            for i, config in ipairs(dap.swiftpm.configs) do
+            for i, config in ipairs(LoadSwiftPMConfigs()) do
                 items[#items + 1] = {
                     text = config.name,
                     idx = i,
@@ -329,12 +340,81 @@ vim.keymap.set("n", "<leader>ds", function()
         confirm = function(picker, item)
             picker:close()
             local config = item.item
-            local binPath = vim.fn.system({ "swift", "build", "--show-bin-path" }):gsub("\n", "")
-            config.program = vim.fs.joinpath(binPath,config.product)
-            if vim.fn.has("win32") == 1 then
-                config.program = config.program .. ".exe"
+            dap.last_swiftpm = config
+            SwiftBuild("swift build --product " .. config.product, true, function()
+                local qflist = vim.fn.getqflist()
+                local errors = vim.tbl_filter(function(qfitem)
+                    return qfitem.type == "E" or qfitem.type == "e"
+                end, qflist)
+                if #errors == 0 then
+                    local binPath = vim.fn.system({ "swift", "build", "--show-bin-path" }):gsub("\n", "")
+                    config.program = vim.fs.joinpath(binPath,config.product)
+                    if vim.fn.has("win32") == 1 then
+                        config.program = config.program .. ".exe"
+                    end
+                    dap.run(config)
+               end
+           end)
+        end
+    })
+end)
+
+vim.keymap.set("n", "<leader>dl", function()
+    local config = dap.last_swiftpm
+    if config then
+         SwiftBuild("swift build --product " .. config.product, true, function()
+            local qflist = vim.fn.getqflist()
+            local errors = vim.tbl_filter(function(qfitem)
+                return qfitem.type == "E" or qfitem.type == "e"
+            end, qflist)
+            if #errors == 0 then
+                dap.run_last()
             end
-            dap.run(config)
+        end)
+    else
+        dap.run_last()
+    end
+end, { desc = "Debug Last Config"})
+
+vim.keymap.set("n", "<leader>dn", function()
+    local desc = vim.json.decode(vim.fn.system({"swift", "package", "describe", "--type", "json"}))
+    local execs = {}
+    for _, product in ipairs(desc.products) do
+        if product.type.executable ~= nil then
+            table.insert(execs, { text = product.name })
+        end
+    end
+
+    Snacks.picker.pick({
+        source = "swift_execs",
+        items = execs,
+        format = "text",
+        layout = {
+            preset = "select"
+        },
+        confirm = function(picker, item)
+            picker:close()
+            local product = item.text
+            local newItem = {
+                name = "New " .. product,
+                type = "lldb",
+                request = "launch",
+                product = product
+            }
+            local configs = LoadSwiftPMConfigs()
+            table.insert(configs, 1, newItem)
+            local data = vim.fn.system({"jq", "--indent", "4", "."},vim.json.encode(configs))
+            local root = vim.fs.root(0, "Package.swift")
+            local filepath = vim.fs.joinpath(root, ".vscode", "nvim-dap.json")
+            vim.fn.mkdir(vim.fs.dirname(filepath))
+            local file = io.open(filepath, "w")
+            if file then
+                file:write(data)
+                file:close()
+                vim.cmd.edit(filepath)
+            else
+                vim.notify("Unable to write config file", vim.log.levels.ERROR)
+            end
         end
     })
 end)

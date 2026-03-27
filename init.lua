@@ -259,12 +259,18 @@ if vim.fn.has("mac") == 1 then
     dap.adapters.lldb = {
         type = "executable",
         command = "xcrun",
-        args = { "lldb-dap" }
+        args = { "lldb-dap" },
+        options = {
+            initialize_timeout_sec = 20,  -- default is 4 seconds
+        },
     }
 else
     dap.adapters.lldb = {
         type = "executable",
-        command = "lldb-dap"
+        command = "lldb-dap",
+        options = {
+            initialize_timeout_sec = 20,  -- default is 4 seconds
+        },
     }
 end
 
@@ -359,7 +365,7 @@ vim.keymap.set("n", "<leader>ds", function()
            end)
         end
     })
-end)
+end, { desc = "Start Debug Session" })
 
 vim.keymap.set("n", "<leader>dl", function()
     local config = dap.last_swiftpm
@@ -376,7 +382,7 @@ vim.keymap.set("n", "<leader>dl", function()
     else
         dap.run_last()
     end
-end, { desc = "Debug Last Config"})
+end, { desc = "Debug Last Config" })
 
 vim.keymap.set("n", "<leader>dn", function()
     local desc = vim.json.decode(vim.fn.system({"swift", "package", "describe", "--type", "json"}))
@@ -419,7 +425,7 @@ vim.keymap.set("n", "<leader>dn", function()
             end
         end
     })
-end)
+end, { desc = "Create New Debug Config" })
 
 -- INFO: better statusline
 vim.pack.add({ "https://github.com/nvim-lualine/lualine.nvim" }, { confirm = false })

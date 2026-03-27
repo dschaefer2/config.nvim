@@ -106,6 +106,8 @@ vim.keymap.set("n", "<C-x>0", "<C-w>q")
 vim.keymap.set("n", "<C-x>1", "<C-w>o")
 vim.keymap.set("n", "<C-x>2", "<C-w>s")
 vim.keymap.set("n", "<C-x>o", "<C-w>w")
+vim.keymap.set("n", "<C-x>b", ":bprevious")
+vim.keymap.set("n", "<C-x>k", "<cmd>bdelete<CR>")
 
 vim.keymap.set("i", "<C-k>", "<Esc>ld$a")
 vim.keymap.set("n", "<C-k>", "d$")

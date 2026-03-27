@@ -214,6 +214,10 @@ vim.lsp.config('lua_ls', {
     },
 })
 
+vim.lsp.config('sourcekit', {
+    cmd = { vim.env.SOURCEKIT_LSP or "sourcekit-lsp" }
+})
+
 vim.lsp.enable({
     "lua_ls",
     "sourcekit",

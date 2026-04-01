@@ -3,6 +3,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- confirm on exit
+vim.o.confirm = true
+
 -- enable true color support
 vim.opt.termguicolors = true
 

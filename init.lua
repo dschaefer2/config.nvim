@@ -102,7 +102,7 @@ vim.keymap.set(mode, "<C-d>", "<Del>")
 vim.keymap.set("n", "<C-BS>", "diw")
 vim.keymap.set("i", "<C-x><C-s>", "<Esc>:w<CR>")
 vim.keymap.set("n", "<C-x><C-s>", ":w<CR>")
-vim.keymap.set("n", "<C-x>c", ":q<CR>")
+vim.keymap.set("n", "<C-x>c", "<CMD>q<CR>")
 vim.keymap.set("n", "<C-g>", "<Esc>:nohlsearch<CR>")
 
 vim.keymap.set("n", "<C-x>0", "<C-w>q")
@@ -455,6 +455,7 @@ require("which-key").setup({
 
 vim.pack.add({
     "https://github.com/folke/snacks.nvim",
+    "https://github.com/stevearc/oil.nvim",
     "https://github.com/nvim-tree/nvim-web-devicons",
 }, { confirm = false })
 
@@ -462,13 +463,11 @@ local snacks = require("snacks")
 
 snacks.setup({
     picker = {},
-    explorer = {},
     terminal = {},
 })
 
 vim.keymap.set("n", "<leader>ff", snacks.picker.files, { desc = "Find Files" })
 vim.keymap.set("n", "<leader>fb", snacks.picker.buffers, { desc = "find Buffers" })
-vim.keymap.set("n", "<leader>e", function() snacks.explorer() end, { desc = "Explorer" })
 vim.keymap.set("n", "<leader>fg", snacks.picker.grep, { desc = "Grep Files" })
 vim.keymap.set("n", "<leader>t", snacks.terminal.toggle, { desc = "Toggle Terminal" })
 vim.keymap.set("n", "<leader>fr", snacks.picker.recent, { desc = "Recent Files" })
@@ -485,6 +484,15 @@ vim.keymap.set("n", "<leader>gs", snacks.picker.lsp_symbols, { desc = "Find Symb
 vim.keymap.set("n", "<leader>sS", snacks.picker.lsp_workspace_symbols, { desc = "Find Workspace Symbols" })
 
 vim.keymap.set("t", "<C-x>o", "<C-\\><C-N><C-w>w")
+
+require("oil").setup({
+    keymaps = {
+        ["<leader>p"] = "actions.preview",
+        ["<C-p>"] = false,
+    },
+})
+
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" })
 
 -- INFO: utility plugins
 vim.pack.add({

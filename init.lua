@@ -60,6 +60,8 @@ vim.opt.inccommand = "split"
 -- show which line your cursor is on
 vim.opt.cursorline = true
 
+vim.opt.scrolloff = 8
+
 -- set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 

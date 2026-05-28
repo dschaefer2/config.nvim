@@ -10,6 +10,8 @@ vim.keymap.set(mode, "<C-a>", "<Home>")
 vim.keymap.set(mode, "<C-e>", "<End>")
 
 vim.keymap.set("n", "<C-g>", ":nohl<CR>", { desc = "Clear search highlighting", silent = true })
+vim.keymap.set("n", "<C-d>", "x")
+vim.keymap.set("i", "<C-d>", "<Del>")
 
 vim.keymap.set("n", "<C-w><C-n>", "<C-w>j")
 

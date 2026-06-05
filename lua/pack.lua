@@ -10,10 +10,9 @@ vim.pack.add({
 local MiniFiles = require("mini.files")
 MiniFiles.setup({
     mappings = {
-        go_in = "L",
         go_in_plus = "<CR>",
-        go_out = "_",
-        go_out_plus = "H",
+        go_out_plus = "-",
+        close = "<Esc>",
     },
 })
 

@@ -22,6 +22,12 @@ vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- lsp
 
+if vim.env.SOURCEKIT_LSP then
+    vim.lsp.config("sourcekit", {
+        cmd = { vim.env.SOURCEKIT_LSP }
+    })
+end
+
 vim.lsp.enable("sourcekit")
 
 -- blink

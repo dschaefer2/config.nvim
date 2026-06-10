@@ -1,42 +1,21 @@
-vim.g.netrw_banner = 0
-
-vim.opt.nu = true
+vim.g.mapleader = " "
+-- Prevents showing extra messages when using completion
+vim.opt.shortmess:append("c")
+vim.opt.number = true
 vim.opt.relativenumber = true
-
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-
-vim.opt.wrap = false
-vim.opt.smartindent = true
-vim.opt.inccommand = "split"
-
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-
+vim.opt.timeoutlen = 500
+vim.opt.updatetime = 4000
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.laststatus = 3
+vim.opt.termguicolors = true
+vim.opt.completeopt = "menu,menuone,noselect,popup"
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.smarttab = true
 
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
-vim.opt.undofile = true
+require('vim._core.ui2').enable({})
+vim.cmd.colorscheme("catppuccin")
 
-vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
-vim.opt.shortmess:append("c")
-vim.opt.clipboard:append("unnamedplus")
-vim.opt.isfname:append("@-@")
-vim.opt.guicursor = ""
-vim.opt.scrolloff = 8
-
-vim.opt.colorcolumn = "0"
-vim.opt.signcolumn = "yes"
-
-vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight when yanking (copying) text",
-    callback = function()
-        vim.hl.on_yank()
-    end,
-})

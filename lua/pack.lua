@@ -6,6 +6,7 @@ vim.pack.add({
     "https://github.com/neovim/nvim-lspconfig",
     "https://github.com/Saghen/blink.cmp",
     "https://github.com/ibhagwan/fzf-lua",
+    "https://github.com/folke/which-key.nvim",
 })
 
 -- oil
@@ -98,3 +99,6 @@ require("lualine").setup()
 require("mini.notify").setup()
 require("mini.pairs").setup()
 
+-- which-key
+
+require("which-key").setup()

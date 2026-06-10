@@ -23,4 +23,5 @@ require("lualine").setup()
 -- mini
 
 require("mini.notify").setup()
+require("mini.pairs").setup()
 

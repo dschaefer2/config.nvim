@@ -32,8 +32,11 @@ vim.lsp.enable("sourcekit")
 
 -- blink
 
-require('blink.cmp').setup({
-    keymap = { preset = 'default' },  -- <C-y> to accept, <C-space> to open, <C-n>/<C-p> to cycle
+require("blink.cmp").setup({
+    keymap = {
+        preset = "default",  -- <C-y> to accept, <C-space> to open, <C-n>/<C-p> to cycle
+        ["<CR>"] = { "accept", "fallback" }
+    },
 
     appearance = {
         nerd_font_variant = 'mono',

@@ -69,30 +69,35 @@ vim.keymap.set('n', '<leader>fr', fzf.resume,       { desc = 'Resume last picker
 
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
-        local opts = { buffer = args.buf }
+        local opts = function(desc)
+            return {
+                buffer = args.buf,
+                desc = desc,
+            }
+        end
         local fzf = require('fzf-lua')
 
         -- navigation
-        vim.keymap.set('n', 'gd', fzf.lsp_definitions,      opts)
-        vim.keymap.set('n', 'gD', fzf.lsp_declarations,     opts)
-        vim.keymap.set('n', 'gi', fzf.lsp_implementations,  opts)
-        vim.keymap.set('n', 'gr', fzf.lsp_references,       opts)
-        vim.keymap.set('n', 'gt', fzf.lsp_typedefs,         opts)
+        vim.keymap.set('n', 'gd', fzf.lsp_definitions,      opts("Go to Definition"))
+        vim.keymap.set('n', 'gD', fzf.lsp_declarations,     opts("Go to Declarations"))
+        vim.keymap.set('n', 'gi', fzf.lsp_implementations,  opts("Go to Implementations"))
+        vim.keymap.set('n', 'gr', fzf.lsp_references,       opts("Go to References"))
+        vim.keymap.set('n', 'gt', fzf.lsp_typedefs,         opts("Go to Typedefs"))
 
         -- symbols
-        vim.keymap.set('n', '<leader>ds', fzf.lsp_document_symbols,           opts)
-        vim.keymap.set('n', '<leader>ws', fzf.lsp_live_workspace_symbols,     opts)
+        vim.keymap.set('n', '<leader>ds', fzf.lsp_document_symbols,           opts("Document Symbols"))
+        vim.keymap.set('n', '<leader>ws', fzf.lsp_live_workspace_symbols,     opts("Workspace Symbols"))
 
         -- diagnostics
-        vim.keymap.set('n', '<leader>dd', fzf.lsp_document_diagnostics,       opts)
-        vim.keymap.set('n', '<leader>dw', fzf.lsp_workspace_diagnostics,      opts)
+        vim.keymap.set('n', '<leader>dd', fzf.lsp_document_diagnostics,       opts("Document Diagnostics"))
+        vim.keymap.set('n', '<leader>dw', fzf.lsp_workspace_diagnostics,      opts("Workspace Diagnostics"))
 
         -- actions (fzf-lua provides a nice picker UI for these too)
-        vim.keymap.set('n', '<leader>ca', fzf.lsp_code_actions,              opts)
+        vim.keymap.set('n', '<leader>ca', fzf.lsp_code_actions,              opts("Code Actions"))
 
         -- these aren't fzf pickers, keep the native ones
-        vim.keymap.set('n', 'K',  vim.lsp.buf.hover,  opts)
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set('n', 'K',  vim.lsp.buf.hover,  opts("Hover"))
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts("Rename"))
     end,
 })
 
